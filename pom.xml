@@ -1,71 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.redhat.insights.expandjsonsmt</groupId>
+	<groupId>au.com.agic.confluent.smt.expandjsonsmt</groupId>
 	<artifactId>kafka-connect-smt-expandjsonsmt</artifactId>
-	<version>0.0.7</version>
+	<version>1.0.0</version>
 
 	<repositories>
 		<repository>
 			<id>confluent</id>
-			<url>http://packages.confluent.io/maven/</url>
+			<url>https://packages.confluent.io/maven/</url>
+		</repository>
+		<repository>
+			<id>central</id>
+			<url>https://repo1.maven.org/maven2/</url>
 		</repository>
 	</repositories>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<kafka.version>2.0.0</kafka.version>
-		<kafka.scala.version>2.11</kafka.scala.version>
-		<scala.version>${kafka.scala.version}.8</scala.version>
-		<confluent.version>5.0.0</confluent.version>
+		<java.version>21</java.version>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+		<confluent.version>8.1.4</confluent.version>
+		<kafka.version>4.1.2</kafka.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
-
-		<!-- Kafka Connect API is the only dependency you need for building Streams 
-			applications. The only other thing is the specific Machine Learning dependencies 
-			for the models you want to build and / or deploy -->
-
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>connect-api</artifactId>
 			<version>${kafka.version}</version>
+			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>connect-transforms</artifactId>
 			<version>${kafka.version}</version>
+			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>bson</artifactId>
-			<version>3.11.0</version>
+			<version>5.7.1</version>
 		</dependency>
 
-    
-		<!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>3.3.0</version>
+			<version>3.26.3</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_${kafka.scala.version}</artifactId>
-			<version>${kafka.version}</version>
-			<classifier>test</classifier>
-			<scope>test</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-clients</artifactId>
@@ -73,37 +69,25 @@
 			<classifier>test</classifier>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>connect-api</artifactId>
-			<version>${kafka.version}</version>
-			<classifier>test</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>connect-transforms</artifactId>
-			<version>${kafka.version}</version>
-			<classifier>test</classifier>
-			<scope>test</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>org.apache.curator</groupId>
 			<artifactId>curator-test</artifactId>
-			<version>2.9.0</version>
+			<version>5.7.1</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>io.confluent</groupId>
 			<artifactId>kafka-schema-registry</artifactId>
 			<version>${confluent.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>io.confluent</groupId>
 			<artifactId>kafka-schema-registry</artifactId>
 			<version>${confluent.version}</version>
-			<!-- Required for e.g. schema registry's RestApp -->
 			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
@@ -111,30 +95,43 @@
 
 	<build>
 		<plugins>
-			<!--force java 8 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.13.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>${maven.compiler.release}</release>
 				</configuration>
 			</plugin>
 
-			<!--package as one fat jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+				<configuration>
+					<useModulePath>false</useModulePath>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit4</artifactId>
+						<version>3.2.5</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5.2</version>
+				<version>3.7.1</version>
 				<configuration>
-                    <descriptors>
-                        <descriptor>src/assembly/src.xml</descriptor>
-                    </descriptors>
+					<descriptors>
+						<descriptor>src/assembly/src.xml</descriptor>
+					</descriptors>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.redhat.insights.expandjsonsmt.ExpandJSON</mainClass>
+							<mainClass>au.com.nik.kafka.smt.expandjsonsmt.ExpandJSON</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

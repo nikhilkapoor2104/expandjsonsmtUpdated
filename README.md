@@ -7,7 +7,7 @@ Use it in connector config file like this:
 ~~~json
 ...
 "transforms": "expand",
-"transforms.expand.type": "com.redhat.insights.expandjsonsmt.ExpandJSON$Value",
+"transforms.expand.type": "au.com.nik.kafka.smt.expandjsonsmt.ExpandJSON$Value",
 "transforms.expand.sourceFields": "metadata"
 ...
 ~~~
@@ -20,13 +20,13 @@ to Kafka Connect container `` copying to its docker image or so.
 
 It can be done adding this line to Dockerfile:
 ~~~Dockerfile
-COPY ./target/kafka-connect-smt-expandjsonsmt-0.0.5-assemble-all.jar $KAFKA_CONNECT_PLUGINS_DIR
+COPY ./target/kafka-connect-smt-expandjsonsmt-1.0.0-assemble-all.jar $KAFKA_CONNECT_PLUGINS_DIR
 ~~~
 
 Or download current release:
 ~~~Dockerfile
 RUN curl -fSL -o /tmp/plugin.tar.gz \
-    https://github.com/RedHatInsights/expandjsonsmt/releases/download/0.0.5/kafka-connect-smt-expandjsonsmt-0.0.5.tar.gz && \
+    https://github.com/nikhilkapoor2104/expandjsonsmtUpdated/releases/download/1.0.0/kafka-connect-smt-expandjsonsmt-1.0.0.tar.gz && \
     tar -xzf /tmp/plugin.tar.gz -C $KAFKA_CONNECT_PLUGINS_DIR && \
     rm -f /tmp/plugin.tar.gz;
 ~~~
